@@ -1,4 +1,7 @@
-function [R] = rotation_matrix(attitude)
+function [R] = TransformFromInertiaToBody(wind_inertial, attitude)
+% input an array of angles in the order [roll angle, pitch angle, yaw angle]
+% should be Inertial to body, but if not just transpose
+
   c_phi   = cos(attitude(1));
   c_theta = cos(attitude(2));
   c_psi   = cos(attitude(3));
