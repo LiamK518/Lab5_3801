@@ -1,4 +1,4 @@
-function var_dot = AircraftEOM(time, aircraft_state, aircraft_surfaces,wind_inertial, aircraft_parameters)
+function var_dot = AircraftEOMDoublet(time, aircraft_state, aircraft_surfaces,doublet_size,doublet_time,wind_inertial, aircraft_parameters)
 
 
 x = aircraft_state(1,1); % Inertial X Position (m)
@@ -25,6 +25,7 @@ Iz = aircraft_parameters.Iz;
 Ixz = aircraft_parameters.Ixz;
 
 
+ 
 
 
 
@@ -56,6 +57,13 @@ psi_dot = ((sin(phi) .* sec(theta)) .* q + (cos(phi) .* sec(theta) .* r));
 
 
 
+% Implementing doublet
+if time > 0 && time<= doublet_time
+    aircraft_surfaces(1) = aircraft_surfaces(1) + doublet_size; % First condition
+elseif time > doublet_time && time<= 2 * doublet_time
+        aircraft_surfaces(1) = aircraft_surfaces(1) - doublet_size; % Second condition
+     
+end
 
 
 % Calculating the Aero Froces and Moments
@@ -94,7 +102,7 @@ gamma_7 = (Ix*(Ix-Iy)+Ixz^2)/gamma;
 gamma_8 = Ix / gamma;
 % Angular Velocity Rates
 p_dot = (gamma_1 * p * q - gamma_2 * q * r) + (gamma_3 * L + gamma_4 * N);
-q_dot = (gamma_5 * p * r - gamma_6 * (p^2 - r^2)) + (1/Iy) * M;
+q_dot = (gamma_5 * p * r - gamma_6*(p^2 - r^2)) + (1/Iy) * M;
 r_dot = (gamma_7 * p * q - gamma_1 * 1 * r) + (gamma_4 * L + gamma_8 * N);
 
 
